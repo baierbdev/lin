@@ -27,6 +27,7 @@ func main() {
 
 	router.POST("/upload/:status", UploadDocument)
 	router.GET("/retrieve/:name", DownloadDocument)
+	router.GET("/list/:nota_id", ListDocumentsByNota)
 
 	router.Run(":8080")
 }

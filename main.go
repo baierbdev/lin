@@ -4,6 +4,9 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+
+	"lin/internal/handler"
+	"lin/internal/service"
 )
 
 func corsMiddleware() gin.HandlerFunc {
@@ -25,9 +28,12 @@ func main() {
 	router := gin.Default()
 	router.Use(corsMiddleware())
 
-	router.POST("/upload/:status", UploadDocument)
-	router.GET("/retrieve/:name", DownloadDocument)
-	router.GET("/list/:nota_id", ListDocumentsByNota)
+	docService := service.NewDocumentService("./data")
+	docHandler := handler.NewDocumentHandler(docService)
+
+	router.POST("/upload/:status", docHandler.UploadDocument)
+	router.GET("/retrieve/:name", docHandler.DownloadDocument)
+	router.GET("/list/:nota_id", docHandler.ListDocumentsByNota)
 
 	router.Run(":8080")
 }

@@ -1,12 +1,15 @@
 package main
 
 import (
+	"log"
 	"net/http"
-
-	"github.com/gin-gonic/gin"
+	"os"
+	"path/filepath"
 
 	"lin/internal/handler"
 	"lin/internal/service"
+
+	"github.com/gin-gonic/gin"
 )
 
 func corsMiddleware() gin.HandlerFunc {
@@ -24,16 +27,36 @@ func corsMiddleware() gin.HandlerFunc {
 	}
 }
 
+var rootDir = "./data"
 func main() {
 	router := gin.Default()
 	router.Use(corsMiddleware())
 
-	notaService := service.NewNotaService("./data")
+	notaService := service.NewNotaService(filepath.Join(rootDir, "notas"))
+	contratoService := service.NewContratoService(filepath.Join(rootDir, "contratos"))
+	atasServices := service.NewAtaService(filepath.Join(rootDir, "atas"))
+
+
 	notaHandler := handler.NewNotaHandler(notaService)
+	contratoHandler := handler.NewContratoHandler(contratoService)
+	ataHandler := handler.NewAtaHandler(atasServices)
 
-	router.POST("/upload/:status", notaHandler.UploadNota)
-	router.GET("/retrieve/:name", notaHandler.DownloadNota)
-	router.GET("/list/:nota_id", notaHandler.ListNotasByNota)
+	router.POST("/notas/upload/:status", notaHandler.UploadNota)
+	router.GET("/notas/retrieve/:name", notaHandler.DownloadNota)
+	router.GET("/notas/list/:nota_id", notaHandler.ListNotasByNota)
 
-	router.Run(":8080")
+	router.POST("/contratos", contratoHandler.UploadFile)	
+	router.GET("/contratos/:name", contratoHandler.DownloadContrato)	
+	router.DELETE("/contratos/:name", contratoHandler.DeleteContrato)	
+
+
+	router.POST("/atas", ataHandler.UploadFile)	
+	router.GET("/atas/:name", ataHandler.DownloadAta)	
+	router.DELETE("/atas/:name", ataHandler.DeleteAta)	
+
+
+	if err := router.Run(":8080"); err != nil {
+		log.Fatalf("Server failed to start in port: %s", err.Error())
+		os.Exit(1)
+	}
 }

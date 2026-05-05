@@ -12,6 +12,3 @@ type NotaListResponse struct {
 	Notas     []ListedNota   `json:"notas"`
 }
 
-type ErrorResponse struct {
-	Error string `json:"error"`
-}

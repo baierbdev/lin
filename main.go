@@ -28,12 +28,12 @@ func main() {
 	router := gin.Default()
 	router.Use(corsMiddleware())
 
-	docService := service.NewDocumentService("./data")
-	docHandler := handler.NewDocumentHandler(docService)
+	notaService := service.NewNotaService("./data")
+	notaHandler := handler.NewNotaHandler(notaService)
 
-	router.POST("/upload/:status", docHandler.UploadDocument)
-	router.GET("/retrieve/:name", docHandler.DownloadDocument)
-	router.GET("/list/:nota_id", docHandler.ListDocumentsByNota)
+	router.POST("/upload/:status", notaHandler.UploadNota)
+	router.GET("/retrieve/:name", notaHandler.DownloadNota)
+	router.GET("/list/:nota_id", notaHandler.ListNotasByNota)
 
 	router.Run(":8080")
 }

@@ -12,21 +12,21 @@ import (
 	"lin/internal/models"
 )
 
-type DocumentService struct {
+type NotaService struct {
 	dataDir string
 }
 
-func NewDocumentService(dataDir string) *DocumentService {
-	return &DocumentService{
+func NewNotaService(dataDir string) *NotaService {
+	return &NotaService{
 		dataDir: dataDir,
 	}
 }
 
-func (s *DocumentService) EnsureDataDir() error {
+func (s *NotaService) EnsureDataDir() error {
 	return os.MkdirAll(s.dataDir, 0o755)
 }
 
-func (s *DocumentService) SaveFile(fileHeader *multipart.FileHeader, notaID, status string) (string, error) {
+func (s *NotaService) SaveFile(fileHeader *multipart.FileHeader, notaID, status string) (string, error) {
 	src, err := fileHeader.Open()
 	if err != nil {
 		return "", fmt.Errorf("failed to open file: %w", err)
@@ -50,17 +50,17 @@ func (s *DocumentService) SaveFile(fileHeader *multipart.FileHeader, notaID, sta
 	return outputName, nil
 }
 
-func (s *DocumentService) ListByNotaID(notaID string) ([]models.ListedDocument, error) {
+func (s *NotaService) ListByNotaID(notaID string) ([]models.ListedNota, error) {
 	entries, err := os.ReadDir(s.dataDir)
 	if err != nil {
 		if os.IsNotExist(err) {
-			return []models.ListedDocument{}, nil
+			return []models.ListedNota{}, nil
 		}
 		return nil, fmt.Errorf("failed to read directory: %w", err)
 	}
 
 	prefix := notaID + "-"
-	documents := make([]models.ListedDocument, 0)
+	notas := make([]models.ListedNota, 0)
 
 	for _, entry := range entries {
 		if entry.IsDir() {
@@ -72,21 +72,21 @@ func (s *DocumentService) ListByNotaID(notaID string) ([]models.ListedDocument, 
 			continue
 		}
 
-		documents = append(documents, models.ListedDocument{
+		notas = append(notas, models.ListedNota{
 			Name:   name,
 			Status: extractStatusFromFilename(name, notaID),
 			URL:    fmt.Sprintf("/retrieve/%s", name),
 		})
 	}
 
-	sort.Slice(documents, func(i, j int) bool {
-		return documents[i].Name > documents[j].Name
+	sort.Slice(notas, func(i, j int) bool {
+		return notas[i].Name > notas[j].Name
 	})
 
-	return documents, nil
+	return notas, nil
 }
 
-func (s *DocumentService) GetFilePath(filename string) string {
+func (s *NotaService) GetFilePath(filename string) string {
 	return filepath.Join(s.dataDir, filename)
 }
 

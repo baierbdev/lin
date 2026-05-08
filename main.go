@@ -35,11 +35,12 @@ func main() {
 	notaService := service.NewNotaService(filepath.Join(rootDir, "notas"))
 	contratoService := service.NewContratoService(filepath.Join(rootDir, "contratos"))
 	atasServices := service.NewAtaService(filepath.Join(rootDir, "atas"))
-
+	aditivoServices := service.NewAditivoService(filepath.Join(rootDir, "aditivos"))
 
 	notaHandler := handler.NewNotaHandler(notaService)
 	contratoHandler := handler.NewContratoHandler(contratoService)
 	ataHandler := handler.NewAtaHandler(atasServices)
+	aditivoHandler := handler.NewAditivoService(aditivoServices)
 
 	router.POST("/notas/upload/:status", notaHandler.UploadNota)
 	router.GET("/notas/retrieve/:name", notaHandler.DownloadNota)
@@ -54,6 +55,9 @@ func main() {
 	router.GET("/atas/:name", ataHandler.DownloadAta)	
 	router.DELETE("/atas/:name", ataHandler.DeleteAta)	
 
+	router.POST("/aditivos", aditivoHandler.UploadFile)	
+	router.GET("/aditivos/:name", aditivoHandler.DownloadAditivo)	
+	router.DELETE("/aditivos/:name", aditivoHandler.DeleteAditivo)
 
 	if err := router.Run(":8080"); err != nil {
 		log.Fatalf("Server failed to start in port: %s", err.Error())

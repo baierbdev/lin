@@ -12,8 +12,9 @@ import (
 type ContratoHandler struct {
 	contratoService service.ContratoService
 }
+
 func NewContratoHandler(svc *service.ContratoService) *ContratoHandler {
-	return  &ContratoHandler{
+	return &ContratoHandler{
 		contratoService: *svc,
 	}
 }
@@ -23,7 +24,7 @@ func (h *ContratoHandler) UploadFile(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, models.ErrorResponse{Error: err.Error()})
 		return
 	}
-	
+
 	contratoId := c.PostForm("contrato_id")
 	if _, err := uuid.Parse(contratoId); err != nil {
 		c.JSON(http.StatusBadRequest, models.ErrorResponse{Error: "contrato_id must be a valid UUID"})
@@ -41,11 +42,11 @@ func (h *ContratoHandler) UploadFile(c *gin.Context) {
 		return
 	}
 	c.String(http.StatusOK, outputName)
-} 
+}
 func (h *ContratoHandler) DownloadContrato(c *gin.Context) {
 	filename := c.Param("name")
 	filePath := h.contratoService.GetContrato(filename)
-	c.File(filePath)	
+	c.File(filePath)
 }
 func (h *ContratoHandler) DeleteContrato(c *gin.Context) {
 	filename := c.Param("name")

@@ -21,7 +21,7 @@ func NewNotaHandler(svc *service.NotaService) *NotaHandler {
 }
 
 func (h *NotaHandler) UploadNota(c *gin.Context) {
-	file, err := c.FormFile("file")
+	form, err := c.MultipartForm()
 	if err != nil {
 		c.JSON(http.StatusBadRequest, models.ErrorResponse{Error: err.Error()})
 		return
@@ -44,13 +44,21 @@ func (h *NotaHandler) UploadNota(c *gin.Context) {
 		return
 	}
 
-	outputName, err := h.service.SaveFile(file, notaID, status)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, models.ErrorResponse{Error: err.Error()})
-		return
+	var fileUrl string
+
+	for key, file := range form.File["files"] {
+		if key != 0 {
+			status = ""
+		}
+		outputName, err := h.service.SaveFile(file, notaID, status)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, models.ErrorResponse{Error: err.Error()})
+			return
+		}
+		fileUrl = outputName
 	}
 
-	c.String(http.StatusOK, outputName)
+	c.String(http.StatusOK, fileUrl)
 }
 
 func (h *NotaHandler) DownloadNota(c *gin.Context) {
@@ -73,8 +81,8 @@ func (h *NotaHandler) ListNotasByNota(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, models.NotaListResponse{
-		NotaID:  notaID,
-		Count:   len(notas),
-		Notas:   notas,
+		NotaID: notaID,
+		Count:  len(notas),
+		Notas:  notas,
 	})
 }

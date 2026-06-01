@@ -12,8 +12,9 @@ import (
 type AtaHandler struct {
 	ataService service.AtaService
 }
+
 func NewAtaHandler(svc *service.AtaService) *AtaHandler {
-	return  &AtaHandler{
+	return &AtaHandler{
 		ataService: *svc,
 	}
 }
@@ -23,7 +24,7 @@ func (h *AtaHandler) UploadFile(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, models.ErrorResponse{Error: err.Error()})
 		return
 	}
-	
+
 	ataId := c.PostForm("ata_id")
 	if _, err := uuid.Parse(ataId); err != nil {
 		c.JSON(http.StatusBadRequest, models.ErrorResponse{Error: "ata_id must be a valid UUID"})
@@ -41,11 +42,11 @@ func (h *AtaHandler) UploadFile(c *gin.Context) {
 		return
 	}
 	c.String(http.StatusOK, outputName)
-} 
+}
 func (h *AtaHandler) DownloadAta(c *gin.Context) {
 	filename := c.Param("name")
 	filePath := h.ataService.GetAta(filename)
-	c.File(filePath)	
+	c.File(filePath)
 }
 func (h *AtaHandler) DeleteAta(c *gin.Context) {
 	filename := c.Param("name")
@@ -56,4 +57,18 @@ func (h *AtaHandler) DeleteAta(c *gin.Context) {
 	}
 	c.JSON(http.StatusNoContent, nil)
 
+}
+func (h *AtaHandler) LoadAtaPncp(c *gin.Context) {
+	cnpj := c.Param("cnpj")
+	year := c.Param("year")
+	sequencialCompra := c.Param("sequencialCompra")
+	sequencialAta := c.Param("sequencialAta")
+
+	data, err := h.ataService.GetAtaInfoPncp(cnpj, year, sequencialCompra, sequencialAta)
+	if err != nil {
+		c.JSON(http.StatusNotFound, models.ErrorResponse{Error: err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, data)
 }

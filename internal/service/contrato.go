@@ -2,35 +2,36 @@ package service
 
 import (
 	"fmt"
+	"io"
 	"mime/multipart"
 	"os"
-	"io"
 	"path/filepath"
 )
 
 type ContratoService struct {
-	dataDir string 
+	dataDir string
 }
+
 func NewContratoService(dataDir string) *ContratoService {
 	return &ContratoService{
 		dataDir: dataDir,
-	}		
+	}
 }
 
 func (s *ContratoService) EnsureContratoDataDir() error {
 	return os.MkdirAll(s.dataDir, 0o755)
 }
-func (s *ContratoService) SaveFile(fileHeader *multipart.FileHeader, contratoId string) (string, error)  {
+
+func (s *ContratoService) SaveFile(fileHeader *multipart.FileHeader, contratoId string) (string, error) {
 	src, err := fileHeader.Open()
 	if err != nil {
 		return "", fmt.Errorf("failed to open a file: %w", err)
 	}
 	defer src.Close()
-	
 
 	safeFilename := filepath.Base(fileHeader.Filename)
 	outputFilename := fmt.Sprintf("%s-%s", contratoId, safeFilename)
-	dst := filepath.Join(s.dataDir, outputFilename) 
+	dst := filepath.Join(s.dataDir, outputFilename)
 
 	out, err := os.Create(dst)
 	if err != nil {
@@ -44,13 +45,15 @@ func (s *ContratoService) SaveFile(fileHeader *multipart.FileHeader, contratoId 
 
 	return outputFilename, nil
 }
-func (s *ContratoService) GetContrato(filename string) (string) {
-	return  filepath.Join(s.dataDir, filename) 
+
+func (s *ContratoService) GetContrato(filename string) string {
+	return filepath.Join(s.dataDir, filename)
 }
+
 func (s *ContratoService) Deletecontrato(filename string) error {
 	dst := filepath.Join(s.dataDir, filename)
 	if err := os.Remove(dst); err != nil {
 		return fmt.Errorf("failed to remove file: %w", err)
 	}
-	return nil	
-} 
+	return nil
+}

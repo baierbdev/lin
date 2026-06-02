@@ -58,3 +58,16 @@ func (h *ContratoHandler) DeleteContrato(c *gin.Context) {
 	c.JSON(http.StatusNoContent, nil)
 
 }
+
+func (h *ContratoHandler) LoadContratoPncp(c *gin.Context) {
+	cnpj := c.Param("cnpj")
+	ano := c.Param("ano")
+	sequencial := c.Param("sequencialContrato")
+
+	resp, err := h.contratoService.GetContratoPncp(cnpj, ano, sequencial)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, models.ErrorResponse{Error: err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, resp)
+}

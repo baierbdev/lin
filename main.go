@@ -45,7 +45,7 @@ func main() {
 	client := &http.Client{}
 
 	notaService := service.NewNotaService(filepath.Join(rootDir, "notas"))
-	contratoService := service.NewContratoService(filepath.Join(rootDir, "contratos"))
+	contratoService := service.NewContratoService(filepath.Join(rootDir, "contratos"), urlPncp, *client)
 	atasServices := service.NewAtaService(filepath.Join(rootDir, "atas"), urlPncp, *client)
 	aditivoServices := service.NewAditivoService(filepath.Join(rootDir, "aditivos"))
 
@@ -58,12 +58,13 @@ func main() {
 	router.GET("/notas/retrieve/:name", notaHandler.DownloadNota)
 	router.GET("/notas/list/:nota_id", notaHandler.ListNotasByNota)
 
+	router.GET("/contratos/pncp/:cnpj/:ano/:sequencialContrato", contratoHandler.LoadContratoPncp)
 	router.POST("/contratos", contratoHandler.UploadFile)
 	router.GET("/contratos/:name", contratoHandler.DownloadContrato)
 	router.DELETE("/contratos/:name", contratoHandler.DeleteContrato)
 
-	router.POST("/atas", ataHandler.UploadFile)
 	router.GET("/atas/pncp/:cnpj/:year/:sequencialCompra/:sequencialAta", ataHandler.LoadAtaPncp)
+	router.POST("/atas", ataHandler.UploadFile)
 	router.GET("/atas/:name", ataHandler.DownloadAta)
 	router.DELETE("/atas/:name", ataHandler.DeleteAta)
 

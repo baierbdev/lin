@@ -25,7 +25,7 @@ func (s *AditivoService) EnsureAditivoDataDir() error {
 func (s *AditivoService) SaveFile(fileHeader *multipart.FileHeader, date string, tipo, contratoId string) (string, error) {
 	src, err := fileHeader.Open()
 	if err != nil {
-		return "", fmt.Errorf("failed to open file: %w", err)
+		return "", fmt.Errorf("falha ao abrir arquivo: %w", err)
 	}
 	defer src.Close()
 
@@ -35,13 +35,13 @@ func (s *AditivoService) SaveFile(fileHeader *multipart.FileHeader, date string,
 
 	out, err := os.Create(dst)
 	if err != nil {
-		return "", fmt.Errorf("failed to create destination file: %w", err)
+		return "", fmt.Errorf("falha ao criar arquivo de destino: %w", err)
 
 	}
 	defer out.Close()
 
 	if _, err := io.Copy(out, src); err != nil {
-		return "", fmt.Errorf("failed to save file: %w", err)
+		return "", fmt.Errorf("falha ao salvar arquivo: %w", err)
 	}
 	return outputFilename, nil
 }
@@ -53,7 +53,7 @@ func (s *AditivoService) GetAditivo(filename string) string {
 func (s *AditivoService) DeleteAditivo(filename string) error {
 	dst := filepath.Join(s.dataDir, filename)
 	if err := os.Remove(dst); err != nil {
-		return fmt.Errorf("failed to remove file: %w", err)
+		return fmt.Errorf("falha ao remover arquivo: %w", err)
 	}
 	return nil
 }

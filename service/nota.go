@@ -29,7 +29,7 @@ func (s *NotaService) EnsureDataDir() error {
 func (s *NotaService) SaveFile(fileHeader *multipart.FileHeader, notaID, status string) (string, error) {
 	src, err := fileHeader.Open()
 	if err != nil {
-		return "", fmt.Errorf("failed to open file: %w", err)
+		return "", fmt.Errorf("falha ao abrir arquivo: %w", err)
 	}
 	defer src.Close()
 
@@ -39,12 +39,12 @@ func (s *NotaService) SaveFile(fileHeader *multipart.FileHeader, notaID, status 
 
 	out, err := os.Create(dst)
 	if err != nil {
-		return "", fmt.Errorf("failed to create destination file: %w", err)
+		return "", fmt.Errorf("falha ao criar arquivo de destino: %w", err)
 	}
 	defer out.Close()
 
 	if _, err = io.Copy(out, src); err != nil {
-		return "", fmt.Errorf("failed to save file: %w", err)
+		return "", fmt.Errorf("falha ao salvar arquivo: %w", err)
 	}
 
 	return outputName, nil
@@ -56,7 +56,7 @@ func (s *NotaService) ListByNotaID(notaID string) ([]models.ListedNota, error) {
 		if os.IsNotExist(err) {
 			return []models.ListedNota{}, nil
 		}
-		return nil, fmt.Errorf("failed to read directory: %w", err)
+		return nil, fmt.Errorf("falha ao ler diretório: %w", err)
 	}
 
 	prefix := notaID + "-"

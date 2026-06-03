@@ -36,7 +36,7 @@ var urlPncp = os.Getenv("PNCP_URL")
 
 func main() {
 	if urlPncp == "" {
-		log.Fatal("PNCP_URL environment variable is not set")
+		log.Fatal("variável de ambiente PNCP_URL não está definida")
 	}
 
 	router := gin.Default()
@@ -73,7 +73,7 @@ func main() {
 	router.DELETE("/aditivos/:name", aditivoHandler.DeleteAditivo)
 
 	if err := router.Run(":8080"); err != nil {
-		log.Fatalf("Server failed to start in port: %s", err.Error())
+		log.Fatalf("servidor falhou ao iniciar na porta: %s", err.Error())
 		os.Exit(1)
 	}
 }

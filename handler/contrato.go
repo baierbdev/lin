@@ -27,7 +27,7 @@ func (h *ContratoHandler) UploadFile(c *gin.Context) {
 
 	contratoId := c.PostForm("contrato_id")
 	if _, err := uuid.Parse(contratoId); err != nil {
-		c.JSON(http.StatusBadRequest, models.ErrorResponse{Error: "contrato_id must be a valid UUID"})
+		c.JSON(http.StatusBadRequest, models.ErrorResponse{Error: "contrato_id deve ser um UUID válido"})
 		return
 	}
 

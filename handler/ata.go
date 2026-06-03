@@ -27,7 +27,7 @@ func (h *AtaHandler) UploadFile(c *gin.Context) {
 
 	ataId := c.PostForm("ata_id")
 	if _, err := uuid.Parse(ataId); err != nil {
-		c.JSON(http.StatusBadRequest, models.ErrorResponse{Error: "ata_id must be a valid UUID"})
+		c.JSON(http.StatusBadRequest, models.ErrorResponse{Error: "ata_id deve ser um UUID válido"})
 		return
 	}
 

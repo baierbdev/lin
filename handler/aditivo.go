@@ -29,14 +29,14 @@ func (h *AditivoHandler) UploadFile(c *gin.Context) {
 	}
 	tipo := c.PostForm("tipo")
 	if tipo == "" {
-		c.JSON(http.StatusBadRequest, models.ErrorResponse{Error: "tipo is required"})
+		c.JSON(http.StatusBadRequest, models.ErrorResponse{Error: "tipo é obrigatório"})
 		return
 	}
 
 	contratoID := c.PostForm("contrato_id")
 	if _, err := uuid.Parse(contratoID); err != nil {
 
-		c.JSON(http.StatusBadRequest, models.ErrorResponse{Error: "contrato_id must be a valid UUID"})
+		c.JSON(http.StatusBadRequest, models.ErrorResponse{Error: "contrato_id deve ser um UUID válido"})
 		return
 	}
 	if err := h.aditivoService.EnsureAditivoDataDir(); err != nil {
@@ -47,7 +47,7 @@ func (h *AditivoHandler) UploadFile(c *gin.Context) {
 
 	date := c.PostForm("data")
 	if _, err := time.Parse(time.RFC3339, date); err != nil {
-		c.JSON(http.StatusBadRequest, models.ErrorResponse{Error: "date must be a valid date"})
+		c.JSON(http.StatusBadRequest, models.ErrorResponse{Error: "data deve ser uma data válida"})
 		return
 
 	}

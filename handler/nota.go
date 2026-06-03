@@ -30,12 +30,12 @@ func (h *NotaHandler) UploadNota(c *gin.Context) {
 	status := c.Param("status")
 	notaID := c.PostForm("nota_id")
 	if notaID == "" {
-		c.JSON(http.StatusBadRequest, models.ErrorResponse{Error: "nota_id is required"})
+		c.JSON(http.StatusBadRequest, models.ErrorResponse{Error: "nota_id é obrigatório"})
 		return
 	}
 
 	if _, err := uuid.Parse(notaID); err != nil {
-		c.JSON(http.StatusBadRequest, models.ErrorResponse{Error: "nota_id must be a valid UUID"})
+		c.JSON(http.StatusBadRequest, models.ErrorResponse{Error: "nota_id deve ser um UUID válido"})
 		return
 	}
 
@@ -70,7 +70,7 @@ func (h *NotaHandler) DownloadNota(c *gin.Context) {
 func (h *NotaHandler) ListNotasByNota(c *gin.Context) {
 	notaID := c.Param("nota_id")
 	if _, err := uuid.Parse(notaID); err != nil {
-		c.JSON(http.StatusBadRequest, models.ErrorResponse{Error: "nota_id must be a valid UUID"})
+		c.JSON(http.StatusBadRequest, models.ErrorResponse{Error: "nota_id deve ser um UUID válido"})
 		return
 	}
 

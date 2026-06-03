@@ -32,7 +32,7 @@ func (s *ContratoService) EnsureContratoDataDir() error {
 func (s *ContratoService) SaveFile(fileHeader *multipart.FileHeader, contratoId string) (string, error) {
 	src, err := fileHeader.Open()
 	if err != nil {
-		return "", fmt.Errorf("failed to open a file: %w", err)
+		return "", fmt.Errorf("falha ao abrir arquivo: %w", err)
 	}
 	defer src.Close()
 
@@ -42,12 +42,12 @@ func (s *ContratoService) SaveFile(fileHeader *multipart.FileHeader, contratoId 
 
 	out, err := os.Create(dst)
 	if err != nil {
-		return "", fmt.Errorf("failed to create destination file: %w", err)
+		return "", fmt.Errorf("falha ao criar arquivo de destino: %w", err)
 	}
 	defer out.Close()
 
 	if _, err := io.Copy(out, src); err != nil {
-		return "", fmt.Errorf("failed to save file: %w", err)
+		return "", fmt.Errorf("falha ao salvar arquivo: %w", err)
 	}
 
 	return outputFilename, nil
@@ -60,7 +60,7 @@ func (s *ContratoService) GetContrato(filename string) string {
 func (s *ContratoService) Deletecontrato(filename string) error {
 	dst := filepath.Join(s.dataDir, filename)
 	if err := os.Remove(dst); err != nil {
-		return fmt.Errorf("failed to remove file: %w", err)
+		return fmt.Errorf("falha ao remover arquivo: %w", err)
 	}
 	return nil
 }
@@ -71,24 +71,24 @@ func (s *ContratoService) GetContratoPncp(cnpj string, ano string, sequencialCon
 	)
 	res, err := s.client.Get(urlReq)
 	if err != nil {
-		return nil, fmt.Errorf("failed in requisition: %w", err)
+		return nil, fmt.Errorf("falha na requisição: %w", err)
 	}
 	defer res.Body.Close()
 
 	if res.StatusCode == http.StatusNotFound {
-		return nil, fmt.Errorf("contrato not found in PNCP (404)")
+		return nil, fmt.Errorf("contrato não encontrado no PNCP (404)")
 	}
 	if res.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("PNCP API returned unexpected status: %d", res.StatusCode)
+		return nil, fmt.Errorf("API do PNCP retornou status inesperado: %d", res.StatusCode)
 	}
 	body, err := io.ReadAll(res.Body)
 	if err != nil {
-		return nil, fmt.Errorf("failed parsing the response: %w", err)
+		return nil, fmt.Errorf("falha ao processar a resposta: %w", err)
 	}
 
 	data := &models.ContratoPncp{}
 	if err := json.Unmarshal(body, data); err != nil {
-		return nil, fmt.Errorf("failed to retrieve contrato from pncp: %w", err)
+		return nil, fmt.Errorf("falha ao recuperar contrato do PNCP: %w", err)
 	}
 	return data, nil
 }

@@ -6,8 +6,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 
-	"lin/internal/models"
-	"lin/internal/service"
+	"lin/models"
+	"lin/service"
 )
 
 type NotaHandler struct {

@@ -10,8 +10,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"lin/internal/handler"
-	"lin/internal/service"
+	"lin/handler"
+	"lin/service"
 
 	"github.com/gin-gonic/gin"
 )

@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"lin/internal/models"
+	"lin/models"
 	"mime/multipart"
 	"net/http"
 	"os"

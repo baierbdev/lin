@@ -9,7 +9,7 @@ import (
 	"sort"
 	"strings"
 
-	"lin/internal/models"
+	"lin/models"
 )
 
 type NotaService struct {

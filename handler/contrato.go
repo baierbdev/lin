@@ -1,8 +1,8 @@
 package handler
 
 import (
-	"lin/internal/models"
-	"lin/internal/service"
+	"lin/models"
+	"lin/service"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

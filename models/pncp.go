@@ -1,5 +1,7 @@
 package models
 
+// ContratoPncp representa um contrato obtido da API do Portal Nacional de
+// Contratações Públicas (PNCP), com todos os seus metadados e valores financeiros.
 type ContratoPncp struct {
 	AnoContrato                 int32            `json:"anoContrato"`
 	TipoContrato                TipoContrato     `json:"tipoContrato"`
@@ -43,6 +45,8 @@ type ContratoPncp struct {
 	NumeroControlePncpAta       string           `json:"numeroControlePncpAta"`
 }
 
+// AtaPncp representa uma ata de registro de preço obtida da API do PNCP,
+// contendo dados da ata, vigência, órgãos envolvidos e informações da compra.
 type AtaPncp struct {
 	NumeroAta                    string           `json:"numeroAtaRegistroPreco"`
 	AnoData                      int32            `json:"anoAta"`
@@ -69,6 +73,7 @@ type AtaPncp struct {
 	PossibilidadeAdesao          bool             `json:"possibilidadeAdesao"`
 }
 
+// Orgao representa um órgão público com CNPJ, razão social, esfera e poder.
 type Orgao struct {
 	Cnpj        string `json:"cnpj"`
 	RazaoSocial string `json:"razaoSocial"`
@@ -76,6 +81,8 @@ type Orgao struct {
 	PoderId     string `json:"poderId"`
 }
 
+// Unidade representa uma unidade organizacional com código, nome,
+// município (nome e código IBGE) e UF (sigla e nome).
 type Unidade struct {
 	CodigoUnidade string `json:"codigoUnidade"`
 	NomeUnidade   string `json:"nomeUnidade"`
@@ -85,6 +92,7 @@ type Unidade struct {
 	UfNome        string `json:"ufNome"`
 }
 
+// TipoContrato representa um tipo de contrato cadastrado no PNCP.
 type TipoContrato struct {
 	Id              int32  `json:"id"`
 	Nome            string `json:"nome"`
@@ -94,6 +102,7 @@ type TipoContrato struct {
 	Status          bool   `json:"statusAtivo"`
 }
 
+// CategoriaProcesso representa uma categoria de processo no PNCP.
 type CategoriaProcesso struct {
 	Id   int32  `json:"id"`
 	Nome string `json:"nome"`

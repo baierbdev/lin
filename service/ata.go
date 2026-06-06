@@ -11,12 +11,16 @@ import (
 	"path/filepath"
 )
 
+// AtaService gerencia o armazenamento de arquivos de atas de registro de preço
+// e fornece integração com a API do Portal Nacional de Contratações Públicas (PNCP).
 type AtaService struct {
 	dataDir string
 	client  http.Client
 	urlPncp string
 }
 
+// NewAtaService cria um novo AtaService com o diretório de dados, a URL base da API
+// do PNCP e o cliente HTTP para realizar as requisições.
 func NewAtaService(dataDir, urlPncp string, client http.Client) *AtaService {
 	return &AtaService{
 		dataDir: dataDir,
@@ -24,10 +28,15 @@ func NewAtaService(dataDir, urlPncp string, client http.Client) *AtaService {
 		urlPncp: urlPncp,
 	}
 }
+// EnsureAtaDataDir garante que o diretório de dados de atas exista,
+// criando-o com permissões 0755 se necessário.
 func (s *AtaService) EnsureAtaDataDir() error {
 	return os.MkdirAll(s.dataDir, 0o755)
 }
 
+// SaveFile salva um arquivo de ata no diretório de dados com o nome composto
+// no formato "{ataId}-{nomeOriginal}". Retorna o nome do arquivo gerado
+// ou um erro em caso de falha na abertura, criação ou cópia do arquivo.
 func (s *AtaService) SaveFile(fileHeader *multipart.FileHeader, ataId string) (string, error) {
 	src, err := fileHeader.Open()
 	if err != nil {
@@ -52,9 +61,12 @@ func (s *AtaService) SaveFile(fileHeader *multipart.FileHeader, ataId string) (s
 
 	return outputFilename, nil
 }
+// GetAta retorna o caminho completo do arquivo de ata no diretório de dados.
 func (s *AtaService) GetAta(filename string) string {
 	return filepath.Join(s.dataDir, filename)
 }
+// DeleteAta remove um arquivo de ata do diretório de dados.
+// Retorna erro se a remoção falhar.
 func (s *AtaService) DeleteAta(filename string) error {
 	dst := filepath.Join(s.dataDir, filename)
 	if err := os.Remove(dst); err != nil {
@@ -63,6 +75,10 @@ func (s *AtaService) DeleteAta(filename string) error {
 	return nil
 }
 
+// GetAtaInfoPncp consulta a API do PNCP para obter informações de uma ata de registro
+// de preço específica, identificada pelo CNPJ do órgão, ano, sequencial da compra
+// e sequencial da ata. Retorna os dados da ata ou erro em caso de falha na requisição,
+// parse da resposta ou ata não encontrada (404).
 func (s *AtaService) GetAtaInfoPncp(cnpj string, year string, sequencialCompra string, sequencialAta string) (*models.AtaPncp, error) {
 
 	urlReq := fmt.Sprintf("%s/v1/orgaos/%s/compras/%s/%s/atas/%s",

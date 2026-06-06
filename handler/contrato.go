@@ -9,15 +9,21 @@ import (
 	"github.com/google/uuid"
 )
 
+// ContratoHandler gerencia as requisições HTTP relacionadas a contratos,
+// incluindo upload, download e exclusão de arquivos, além da consulta ao PNCP.
 type ContratoHandler struct {
 	contratoService service.ContratoService
 }
 
+// NewContratoHandler cria um novo ContratoHandler com o serviço de contratos fornecido.
 func NewContratoHandler(svc *service.ContratoService) *ContratoHandler {
 	return &ContratoHandler{
 		contratoService: *svc,
 	}
 }
+// UploadFile gerencia o upload de arquivos de contrato (POST /contratos).
+// Aceita um arquivo multipart e o campo contrato_id (UUID válido obrigatório).
+// O arquivo é salvo com o prefixo do contrato_id seguido do nome original do arquivo.
 func (h *ContratoHandler) UploadFile(c *gin.Context) {
 	file, err := c.FormFile("file")
 	if err != nil {
@@ -43,11 +49,15 @@ func (h *ContratoHandler) UploadFile(c *gin.Context) {
 	}
 	c.String(http.StatusOK, outputName)
 }
+// DownloadContrato serve o arquivo de contrato solicitado para download (GET /contratos/:name).
+// O parâmetro :name na URL corresponde ao nome do arquivo armazenado no diretório de dados.
 func (h *ContratoHandler) DownloadContrato(c *gin.Context) {
 	filename := c.Param("name")
 	filePath := h.contratoService.GetContrato(filename)
 	c.File(filePath)
 }
+// DeleteContrato remove um arquivo de contrato do armazenamento (DELETE /contratos/:name).
+// Retorna 204 No Content em caso de sucesso ou 500 Internal Server Error em caso de falha.
 func (h *ContratoHandler) DeleteContrato(c *gin.Context) {
 	filename := c.Param("name")
 
@@ -59,6 +69,9 @@ func (h *ContratoHandler) DeleteContrato(c *gin.Context) {
 
 }
 
+// LoadContratoPncp consulta informações de um contrato no Portal Nacional de Contratações Públicas
+// (GET /contratos/pncp/:cnpj/:ano/:sequencialContrato).
+// Retorna os dados do contrato em JSON ou erro se não encontrado no PNCP.
 func (h *ContratoHandler) LoadContratoPncp(c *gin.Context) {
 	cnpj := c.Param("cnpj")
 	ano := c.Param("ano")

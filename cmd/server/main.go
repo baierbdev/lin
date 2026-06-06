@@ -16,6 +16,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// corsMiddleware retorna um middleware Gin que configura cabeçalhos CORS
+// permitindo requisições de qualquer origem (Access-Control-Allow-Origin: *).
+// Também responde automaticamente a requisições OPTIONS (preflight) com 204 No Content.
 func corsMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.Header("Access-Control-Allow-Origin", "*")
@@ -34,6 +37,9 @@ func corsMiddleware() gin.HandlerFunc {
 var rootDir = "./data"
 var urlPncp = os.Getenv("PNCP_URL")
 
+// main é o ponto de entrada da aplicação. Inicializa os serviços e handlers
+// para gestão de documentos (notas fiscais, contratos, atas, aditivos),
+// registra as rotas no roteador Gin e inicia o servidor HTTP na porta 8080.
 func main() {
 	if urlPncp == "" {
 		log.Fatal("variável de ambiente PNCP_URL não está definida")

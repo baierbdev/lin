@@ -75,7 +75,7 @@ func (s *NotaService) ListByNotaID(notaID string) ([]models.ListedNota, error) {
 		notas = append(notas, models.ListedNota{
 			Name:   name,
 			Status: extractStatusFromFilename(name, notaID),
-			URL:    fmt.Sprintf("/retrieve/%s", name),
+			URL:    fmt.Sprintf("/notas/retrieve/%s", name),
 		})
 	}
 

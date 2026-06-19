@@ -8,7 +8,7 @@ type ContratoPncp struct {
 	DataAssinatura              string           `json:"dataAssinatura"`
 	DataVigenciaInicio          string           `json:"dataVigenciaInicio"`
 	DataVigenciaFim             string           `json:"dataVigenciaFim"`
-	FrutoAdesao                 string           `json:"frutoAdesao"`
+	FrutoAdesao                 bool             `json:"frutoAdesao"`
 	DataAtualizacao             string           `json:"dataAtualizacao"`
 	Nifornecedor                string           `json:"niFornecedor"`
 	TipoPessoa                  string           `json:"tipoPessoa"`
